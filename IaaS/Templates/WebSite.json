@@ -37,7 +37,8 @@
     }
   },
   "variables": {
-    "webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]"
+    "webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
+      "litoursName": "[concat('litours', uniqueString(resourceGroup().id))]"
   },
   "resources": [
     {
@@ -290,6 +291,23 @@
       "properties": {
         "applicationId": "[variables('webSiteName')]"
       }
-    }
+    },
+      {
+          "name": "[variables('litoursName')]",
+          "type": "Microsoft.Web/sites",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+              "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+          ],
+          "tags": {
+              "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "Resource",
+              "displayName": "litours"
+          },
+          "properties": {
+              "name": "[variables('litoursName')]",
+              "serverFarmId": "[resourceId('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+          }
+      }
   ]
 }
